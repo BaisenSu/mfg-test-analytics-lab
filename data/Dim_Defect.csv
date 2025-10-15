@@ -1,0 +1,9 @@
+error_code,defect_desc,owner,avg_cost_usd
+ICT_OPEN,Open circuit detected at ICT,process,8.0
+ICT_SHORT,Short circuit detected at ICT,process,12.0
+ADC_LINEARITY,ADC linearity out of spec,design,25.0
+POWER_RAIL_LOW,5V rail low under load,design,40.0
+BOOT_SLOW,Boot time exceeds limit,firmware,6.0
+COMMS_SPI_CRC,SPI CRC errors high,design,10.0
+FIXTURE_CONTACT,Fixture contact intermittency,test,5.0
+PROGRAM_FAIL,Flash verify failed,process,15.0

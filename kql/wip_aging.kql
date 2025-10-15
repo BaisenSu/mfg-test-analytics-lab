@@ -1,0 +1,6 @@
+Fact_TestResults
+| where step endswith "_FINAL_PASS"
+| summarize last_seen = max(timestamp) by unit_id, sku
+| extend age_h = datetime_diff("hour", now(), last_seen) * -1
+| summarize units_in_wip = count(), p90_age_h=percentile(age_h, 90) by sku
+| order by units_in_wip desc

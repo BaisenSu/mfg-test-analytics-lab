@@ -1,0 +1,8 @@
+let gates = dynamic(["ICT","FCT","EOL"]);
+let fpy_by_gate = Fact_TestResults
+| project unit_id, gate = tostring(split(step, "_")[0]), pass
+| summarize gate_pass = minif(pass, pass == false ? 0 : 1) by unit_id, gate
+| where gate in~ gates
+| summarize FPY = todouble(countif(gate_pass == 1)) / todouble(dcount(unit_id)) by gate;
+let rty = toscalar(fpy_by_gate | summarize product(FPY));
+fpy_by_gate | extend RTY = rty

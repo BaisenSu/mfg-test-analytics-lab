@@ -1,0 +1,7 @@
+Fact_StationEvents
+| where timestamp between (ago(24h) .. now())
+| summarize run_ms = sumif(duration_ms, event_type == "run"),
+            window_ms = 24*60*60*1000
+        by station_id
+| extend utilization = run_ms / window_ms
+| order by utilization desc

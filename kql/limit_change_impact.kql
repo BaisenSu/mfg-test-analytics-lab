@@ -1,0 +1,12 @@
+let changes = Dim_LimitChange
+| project step, measurement, change_time=effective_from, widen = iff(new_lo <= old_lo and new_hi >= old_hi, 1, 0);
+Fact_TestResults
+| summarize fpy = todouble(countif(pass)) / todouble(dcount(unit_id)) by step, day=bin(timestamp, 1d)
+| join kind=leftouter (changes) on step
+| extend days_from_change = datetime_diff("day", day, change_time)
+| where isnotnull(days_from_change) and days_from_change between (-7 .. 7)
+| summarize fpy_before=avgif(fpy, days_from_change < 0),
+            fpy_after=avgif(fpy, days_from_change >= 0)
+        by step, widen
+| extend delta = fpy_after - fpy_before
+| order by delta desc

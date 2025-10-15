@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Data/cache
+data/*.zip
+data/*.parquet
+data/*.log
+
+# OS
+.DS_Store
+
+# Notebooks
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/

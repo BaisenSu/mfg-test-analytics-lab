@@ -1,0 +1,71 @@
+// Create tables
+.create-merge table Fact_TestResults (
+  timestamp:datetime, unit_id:string, product:string, sku:string, revision:string, station_id:string,
+  step:string, measurement:string, value:real, lo:real, hi:real, ['pass']:bool, error_code:string,
+  duration_ms:long, firmware_ver:string, test_seq_ver:string, lot_id:string, vendor_id:string
+);
+.create-merge table Fact_StationEvents (
+  timestamp:datetime, station_id:string, event_type:string, reason_code:string, severity:string, duration_ms:long
+);
+.create-merge table Fact_Throughput (
+  hour:datetime, station_id:string, gate:string, units_out:long, units_in:long
+);
+.create-merge table Dim_Defect (
+  error_code:string, defect_desc:string, owner:string, avg_cost_usd:real
+);
+.create-merge table Dim_LimitChange (
+  step:string, measurement:string, effective_from:datetime, old_lo:real, old_hi:real, new_lo:real, new_hi:real, owner:string
+);
+
+// CSV mappings (ordinal indexes must match CSV columns exactly)
+.create table Fact_TestResults ingestion csv mapping 'csvmap' '[
+  {"column":"timestamp","DataType":"datetime","Properties":{"Ordinal":"0"}},
+  {"column":"unit_id","DataType":"string","Properties":{"Ordinal":"1"}},
+  {"column":"product","DataType":"string","Properties":{"Ordinal":"2"}},
+  {"column":"sku","DataType":"string","Properties":{"Ordinal":"3"}},
+  {"column":"revision","DataType":"string","Properties":{"Ordinal":"4"}},
+  {"column":"station_id","DataType":"string","Properties":{"Ordinal":"5"}},
+  {"column":"step","DataType":"string","Properties":{"Ordinal":"6"}},
+  {"column":"measurement","DataType":"string","Properties":{"Ordinal":"7"}},
+  {"column":"value","DataType":"real","Properties":{"Ordinal":"8"}},
+  {"column":"lo","DataType":"real","Properties":{"Ordinal":"9"}},
+  {"column":"hi","DataType":"real","Properties":{"Ordinal":"10"}},
+  {"column":"pass","DataType":"bool","Properties":{"Ordinal":"11"}},
+  {"column":"error_code","DataType":"string","Properties":{"Ordinal":"12"}},
+  {"column":"duration_ms","DataType":"long","Properties":{"Ordinal":"13"}},
+  {"column":"firmware_ver","DataType":"string","Properties":{"Ordinal":"14"}},
+  {"column":"test_seq_ver","DataType":"string","Properties":{"Ordinal":"15"}},
+  {"column":"lot_id","DataType":"string","Properties":{"Ordinal":"16"}},
+  {"column":"vendor_id","DataType":"string","Properties":{"Ordinal":"17"}}
+]';
+.create table Fact_StationEvents ingestion csv mapping 'csvmap' '[
+  {"column":"timestamp","DataType":"datetime","Properties":{"Ordinal":"0"}},
+  {"column":"station_id","DataType":"string","Properties":{"Ordinal":"1"}},
+  {"column":"event_type","DataType":"string","Properties":{"Ordinal":"2"}},
+  {"column":"reason_code","DataType":"string","Properties":{"Ordinal":"3"}},
+  {"column":"severity","DataType":"string","Properties":{"Ordinal":"4"}},
+  {"column":"duration_ms","DataType":"long","Properties":{"Ordinal":"5"}}
+]';
+.create table Fact_Throughput ingestion csv mapping 'csvmap' '[
+  {"column":"hour","DataType":"datetime","Properties":{"Ordinal":"0"}},
+  {"column":"station_id","DataType":"string","Properties":{"Ordinal":"1"}},
+  {"column":"gate","DataType":"string","Properties":{"Ordinal":"2"}},
+  {"column":"units_out","DataType":"long","Properties":{"Ordinal":"3"}},
+  {"column":"units_in","DataType":"long","Properties":{"Ordinal":"4"}}
+]';
+.create table Dim_Defect ingestion csv mapping 'csvmap' '[
+  {"column":"error_code","DataType":"string","Properties":{"Ordinal":"0"}},
+  {"column":"defect_desc","DataType":"string","Properties":{"Ordinal":"1"}},
+  {"column":"owner","DataType":"string","Properties":{"Ordinal":"2"}},
+  {"column":"avg_cost_usd","DataType":"real","Properties":{"Ordinal":"3"}}
+]';
+.create table Dim_LimitChange ingestion csv mapping 'csvmap' '[
+  {"column":"step","DataType":"string","Properties":{"Ordinal":"0"}},
+  {"column":"measurement","DataType":"string","Properties":{"Ordinal":"1"}},
+  {"column":"effective_from","DataType":"datetime","Properties":{"Ordinal":"2"}},
+  {"column":"old_lo","DataType":"real","Properties":{"Ordinal":"3"}},
+  {"column":"old_hi","DataType":"real","Properties":{"Ordinal":"4"}},
+  {"column":"new_lo","DataType":"real","Properties":{"Ordinal":"5"}},
+  {"column":"new_hi","DataType":"real","Properties":{"Ordinal":"6"}},
+  {"column":"owner","DataType":"string","Properties":{"Ordinal":"7"}}
+]';

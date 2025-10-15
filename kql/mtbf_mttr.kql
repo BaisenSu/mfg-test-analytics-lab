@@ -1,0 +1,10 @@
+let faults = Fact_StationEvents
+| where timestamp > ago(30d) and event_type == "fault"
+| project station_id, timestamp, duration_ms;
+faults
+| summarize faults=count(), mttr_min=avg(duration_ms)/60000.0 by station_id
+| join kind=leftouter (
+    faults | summarize hours_window = 24.0*30 by station_id
+) on station_id
+| extend mtbf_h = hours_window / faults
+| project station_id, faults, mttr_min, mtbf_h

@@ -1,0 +1,7 @@
+Fact_TestResults
+| where pass == false
+| summarize fails = count(), units = dcount(unit_id) by error_code
+| join kind=leftouter (Dim_Defect) on error_code
+| extend cost = fails * toreal(avg_cost_usd)
+| top 10 by cost desc
+| project error_code, defect_desc, owner, fails, units, cost

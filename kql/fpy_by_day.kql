@@ -1,0 +1,6 @@
+let first_pass = 
+    Fact_TestResults
+    | summarize all_steps_pass = minif(pass, pass == false ? 0 : 1) by unit_id, sku, day=bin(timestamp, 1d);
+first_pass
+| summarize units=dcount(unit_id), fpy=todouble(countif(all_steps_pass==1))/todouble(dcount(unit_id)) by day, sku
+| order by day asc
